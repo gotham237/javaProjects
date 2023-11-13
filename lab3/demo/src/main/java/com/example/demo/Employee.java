@@ -17,6 +17,14 @@ public class Employee implements Comparable<Employee> {
         this.wynagrodzenie = wynagrodzenie;
     }
 
+//    public Employee(String imie, String nazwisko) {
+//        this.imie = imie;
+//        this.nazwisko = nazwisko;
+//        this.employeeCondition = null;
+//        this.rokUrodzenia = 0;
+//        this.wynagrodzenie = 0;
+//    }
+
     public void printing() {
         System.out.println(
                 "Imie: " + imie
@@ -57,5 +65,10 @@ public class Employee implements Comparable<Employee> {
         //zwraca 0 jesli sa rowne
         // -1 jesli nie sa
         return this.nazwisko.compareTo(e.nazwisko) & this.imie.compareTo(e.imie);
+    }
+
+    @Override
+    public String toString() {
+        return this.imie + " " + this.nazwisko;
     }
 }
