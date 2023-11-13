@@ -1,10 +1,14 @@
 package com.example.demo;
 
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public class EmployeeController {
     @FXML
@@ -40,9 +44,11 @@ public class EmployeeController {
     @FXML
     private TableColumn<Employee, String> groupNameColumn;
     @FXML
-    private TableColumn<Employee, Integer> employeesColumn;
+    private TableColumn<Employee, List<Employee>> employeesColumn;
     @FXML
     private TableColumn<Employee, Integer> maxEmployeesColumn;
+    @FXML
+    private TableColumn<ClassEmployee, Double> isFull;
     @FXML
     private TextField groupNameField;
     @FXML
@@ -61,19 +67,65 @@ public class EmployeeController {
         salaryColumn.setCellValueFactory(new PropertyValueFactory<>("wynagrodzenie"));
 
         // add default employees
-        employeesTable.getItems().add(new Employee("Szymon", "Tymula", EmployeeCondition.OBECNY, 2002, 8000));
-        employeesTable.getItems().add(new Employee("Piotr", "Nowak", EmployeeCondition.NIEOBECNY, 2000, 10000));
-        employeesTable.getItems().add(new Employee("Michal", "Kowalski", EmployeeCondition.CHORY, 1999, 6000));
+        Employee e1 = new Employee("Szymon", "Tymula", EmployeeCondition.OBECNY, 2002, 8000);
+        Employee e2 = new Employee("Piotr", "Nowak", EmployeeCondition.NIEOBECNY, 2000, 10000);
+        Employee e3 = new Employee("Michal", "Kowalski", EmployeeCondition.CHORY, 1999, 6000);
+        Employee e4 = new Employee("Karol", "Kot", EmployeeCondition.DELEGACJA, 1997, 7000);
+        employeesTable.getItems().add(e1);
+        employeesTable.getItems().add(e2);
+        employeesTable.getItems().add(e3);
+        employeesTable.getItems().add(e4);
+
+        //scrollPane in employeesColumn
+        employeesColumn.setCellFactory(column -> {
+            return new TableCell<Employee, List<Employee>>() {
+                private final ScrollPane scrollPane = new ScrollPane();
+                private final VBox content = new VBox();
+                {
+                    scrollPane.setContent(content);
+                    scrollPane.setFitToWidth(true);
+                }
+
+                @Override
+                protected void updateItem(List<Employee> employees, boolean empty) {
+                    super.updateItem(employees, empty);
+
+                    if (employees == null || empty) {
+                        setGraphic(null);
+                    } else {
+                        // Display employee information in the VBox
+                        content.getChildren().clear();
+                        for (Employee employee : employees) {
+                            Label label = new Label(employee.toString()); // Use toString() or format as needed
+                            content.getChildren().add(label);
+                        }
+
+                        setGraphic(scrollPane);
+                    }
+                }
+            };
+        });
 
         // class employee table
         groupNameColumn.setCellValueFactory(new PropertyValueFactory<>("nazwaGrupy"));
         employeesColumn.setCellValueFactory(new PropertyValueFactory<>("listaPracownikow"));
         maxEmployeesColumn.setCellValueFactory(new PropertyValueFactory<>("maxIloscPracownikow"));
 
-        //add default classes
-        classEmployeesTable.getItems().add(new ClassEmployee("Klasa1",  10));
+        isFull.setCellValueFactory((data) -> {
+            ClassEmployee ce = data.getValue();
+            double isFullPercentage = ce.getIsFullPercentage();
+            DecimalFormat decimalFormat = new DecimalFormat("#.##");
+            double roundedIsFullPercentage = Double.parseDouble(decimalFormat.format(isFullPercentage));
+            return new SimpleDoubleProperty(roundedIsFullPercentage).asObject();
+        });
 
-        addEmployeeToClassButton.setOnAction(event -> addEmployeeToClassTable());
+        //add default classes
+        ArrayList<Employee> employeesList = new ArrayList<Employee>();
+        employeesList.add(e1);
+        employeesList.add(e2);
+        employeesList.add(e3);
+        classEmployeesTable.getItems().add(new ClassEmployee("Klasa1", employeesList, 10));
+
     }
 
     @FXML
@@ -108,17 +160,25 @@ public class EmployeeController {
     @FXML
     public void addClassRecord() {
         String groupName = groupNameField.getText();
-        int maxEmployees = Integer.parseInt(maxEmployeesField.getText());
+        String maxEmployeesText = maxEmployeesField.getText();
 
-        // Create a new ClassEmployee instance
-        ClassEmployee newClassEmployee = new ClassEmployee(groupName, maxEmployees);
+        if (!groupName.isEmpty() && !maxEmployeesText.isEmpty()) {
+            int maxEmployees = Integer.parseInt(maxEmployeesText);
 
-        // Add the new class employee to the table
-        classEmployeesTable.getItems().add(newClassEmployee);
+            if (maxEmployees >= 1) {
+                ClassEmployee newClassEmployee = new ClassEmployee(groupName, maxEmployees);
 
-        // Clear the input fields after adding
-        groupNameField.clear();
-        maxEmployeesField.clear();
+                // Add the new class employee to the table
+                classEmployeesTable.getItems().add(newClassEmployee);
+
+                groupNameField.clear();
+                maxEmployeesField.clear();
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Max number of employees must be at least 1");
+            }
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Please enter group name and max number of employees");
+        }
     }
 
     @FXML
@@ -134,7 +194,7 @@ public class EmployeeController {
 
             classEmployeesTable.refresh();
         } else {
-            System.out.println("Please select a class employee to add the employee to.");
+            showAlert(Alert.AlertType.INFORMATION, "Please select the Employee Class to add the employee to.");
         }
     }
 
@@ -143,4 +203,11 @@ public class EmployeeController {
         classEmployeesTable.getItems().removeAll(classEmployeesTable.getSelectionModel().getSelectedItem());
     }
 
+    public void showAlert(Alert.AlertType type, String message) {
+        Alert alert = new Alert(type);
+        alert.setContentText(message);
+        alert.show();
+    }
+
 }
+

@@ -20,10 +20,16 @@ public class ClassEmployee implements Comparator<String>{
         this.listaPracownikow = new ArrayList<>();
     }
 
+    public ClassEmployee(String nazwaGrupy, ArrayList<Employee> listaPracownikow, int maxIloscPracownikow) {
+        this.nazwaGrupy = nazwaGrupy;
+        this.maxIloscPracownikow = maxIloscPracownikow;
+        this.listaPracownikow = listaPracownikow;
+    }
+
     public void addEmployee(Employee pracownik) {
 
         for (Employee e : listaPracownikow) {
-            if (e.compareTo(pracownik) == 1) {
+            if (e.compareTo(pracownik) == 0) {
                 System.out.println("Pracownik o tym imieniu i nazwisku juz istnieje w grupie.");
                 return;
             }
@@ -133,16 +139,18 @@ public class ClassEmployee implements Comparator<String>{
         this.maxIloscPracownikow = maxIloscPracownikow;
     }
     public String getNazwaGrupy() {
-        return this.nazwaGrupy;
+        return nazwaGrupy;
     }
 
     public int getMaxIloscPracownikow() {
-        return this.maxIloscPracownikow;
+        return maxIloscPracownikow;
     }
 
     public ArrayList<Employee> getListaPracownikow() {
-        return this.listaPracownikow;
+        return listaPracownikow;
     }
 
-
+    public double getIsFullPercentage() {
+        return ((double)listaPracownikow.size() / (double) maxIloscPracownikow) * 100;
+    }
 }

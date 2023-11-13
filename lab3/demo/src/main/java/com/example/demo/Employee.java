@@ -64,7 +64,12 @@ public class Employee implements Comparable<Employee> {
     public int compareTo(Employee e) {
         //zwraca 0 jesli sa rowne
         // -1 jesli nie sa
-        return this.nazwisko.compareTo(e.nazwisko) & this.imie.compareTo(e.imie);
+        int lastNameComparison = this.nazwisko.compareTo(e.nazwisko);
+        if (lastNameComparison != 0) {
+            return lastNameComparison;
+        }
+
+        return this.imie.compareTo(e.imie);
     }
 
     @Override
