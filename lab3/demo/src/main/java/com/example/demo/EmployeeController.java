@@ -1,6 +1,8 @@
 package com.example.demo;
 
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -8,11 +10,15 @@ import javafx.scene.layout.VBox;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class EmployeeController {
     @FXML
     private TableView<Employee> employeesTable;
+    private ObservableList<Employee> originalEmployees;
     @FXML
     private TableColumn<Employee, String> firstNameColumn;
     @FXML
@@ -30,7 +36,7 @@ public class EmployeeController {
     private TextField lastNameField;
 
     @FXML
-    private TextField employeeConditionField;
+    private ComboBox<String> employeeConditionField;
 
     @FXML
     private TextField birthYearField;
@@ -38,9 +44,13 @@ public class EmployeeController {
     @FXML
     private TextField salaryField;
 
+    @FXML
+    private TextField lastNameFilterField;
+
     //class employee
     @FXML
     private TableView<ClassEmployee> classEmployeesTable;
+
     @FXML
     private TableColumn<Employee, String> groupNameColumn;
     @FXML
@@ -52,11 +62,13 @@ public class EmployeeController {
     @FXML
     private TextField groupNameField;
     @FXML
-    private TextField employeesField;
-    @FXML
     private TextField maxEmployeesField;
+
     @FXML
-    private Button addEmployeeToClassButton;
+    private TextField partialLastNameField;
+
+    //private Map<ClassEmployee, ObservableList<Employee>> originalEmployeesMap = new HashMap<>();
+
 
     @FXML
     public void initialize() {
@@ -75,6 +87,9 @@ public class EmployeeController {
         employeesTable.getItems().add(e2);
         employeesTable.getItems().add(e3);
         employeesTable.getItems().add(e4);
+
+        // Initialize the originalEmployees list
+        originalEmployees = FXCollections.observableArrayList(employeesTable.getItems());
 
         //scrollPane in employeesColumn
         employeesColumn.setCellFactory(column -> {
@@ -111,6 +126,7 @@ public class EmployeeController {
         employeesColumn.setCellValueFactory(new PropertyValueFactory<>("listaPracownikow"));
         maxEmployeesColumn.setCellValueFactory(new PropertyValueFactory<>("maxIloscPracownikow"));
 
+        //isFull percentage
         isFull.setCellValueFactory((data) -> {
             ClassEmployee ce = data.getValue();
             double isFullPercentage = ce.getIsFullPercentage();
@@ -124,8 +140,13 @@ public class EmployeeController {
         employeesList.add(e1);
         employeesList.add(e2);
         employeesList.add(e3);
-        classEmployeesTable.getItems().add(new ClassEmployee("Klasa1", employeesList, 10));
 
+        ClassEmployee classEmployee1 = new ClassEmployee("Klasa1", employeesList, 10);
+        classEmployeesTable.getItems().add(classEmployee1);
+
+        // Store the original employees for each class in the map
+//        ObservableList<Employee> originalClassEmployees = FXCollections.observableArrayList(employeesList);
+//        originalEmployeesMap.put(classEmployee1, originalClassEmployees);
     }
 
     @FXML
@@ -133,28 +154,45 @@ public class EmployeeController {
         //System.out.println("Add record");
         String firstName = firstNameField.getText();
         String lastName = lastNameField.getText();
-        EmployeeCondition employeeCondition = EmployeeCondition.valueOf(employeeConditionField.getText());
-        int birthYear = Integer.parseInt(birthYearField.getText());
-        double salary = Double.parseDouble(salaryField.getText());
+        String employeeCondition = employeeConditionField.getValue();
+        String birthYear = birthYearField.getText();
+        String salary = salaryField.getText();
 
-        // Create a new Employee instance
-        Employee newEmployee = new Employee(firstName, lastName, employeeCondition, birthYear, salary);
+        if (!firstName.isEmpty() && !lastName.isEmpty() && employeeCondition != null &&  !birthYear.isEmpty() && !salary.isEmpty()) {
+            EmployeeCondition employeeCondition2 = EmployeeCondition.valueOf(employeeCondition);
+            int birthYear2 = Integer.parseInt(birthYear);
+            double salary2 = Double.parseDouble(salary);
 
-        // Add the new employee to the table
-        employeesTable.getItems().add(newEmployee);
-        employeesTable.refresh();
+            // Create a new Employee instance
+            Employee newEmployee = new Employee(firstName, lastName, employeeCondition2, birthYear2, salary2);
 
-        // Clear the input fields after adding
-        firstNameField.clear();
-        lastNameField.clear();
-        employeeConditionField.clear();
-        birthYearField.clear();
-        salaryField.clear();
+            // Add the new employee to the table
+            employeesTable.getItems().add(newEmployee);
+            originalEmployees.add(newEmployee);
+            employeesTable.refresh();
+
+            // Clear the input fields after adding
+            firstNameField.clear();
+            lastNameField.clear();
+            employeeConditionField.setValue(null);
+            birthYearField.clear();
+            salaryField.clear();
+        }
+        else {
+            showAlert(Alert.AlertType.INFORMATION, "Please enter First Name, Last Name, Employee Condition, Birth Year, Salary.");
+        }
     }
 
     @FXML
     public void removeEmployeeRecord() {
-        employeesTable.getItems().removeAll(employeesTable.getSelectionModel().getSelectedItem());
+        Employee selectedEmployee = employeesTable.getSelectionModel().getSelectedItem();
+        if (selectedEmployee != null) {
+            employeesTable.getItems().removeAll(employeesTable.getSelectionModel().getSelectedItem());
+            originalEmployees.remove(selectedEmployee);
+        }
+        else {
+            showAlert(Alert.AlertType.INFORMATION, "Please select the Employee you want to remove.");
+        }
     }
 
     @FXML
@@ -177,7 +215,7 @@ public class EmployeeController {
                 showAlert(Alert.AlertType.ERROR, "Max number of employees must be at least 1");
             }
         } else {
-            showAlert(Alert.AlertType.ERROR, "Please enter group name and max number of employees");
+            showAlert(Alert.AlertType.INFORMATION, "Please enter group name and max number of employees");
         }
     }
 
@@ -187,20 +225,26 @@ public class EmployeeController {
         Employee selectedEmployee = employeesTable.getSelectionModel().getSelectedItem();
 
         // Check if a class employee is selected
-        if (selectedClassEmployee != null) {
+        if (selectedClassEmployee != null && selectedEmployee != null) {
 
             // Add the new employee to the selected class employee
             selectedClassEmployee.addEmployee(selectedEmployee);
 
             classEmployeesTable.refresh();
         } else {
-            showAlert(Alert.AlertType.INFORMATION, "Please select the Employee Class to add the employee to.");
+            showAlert(Alert.AlertType.INFORMATION, "Please select the Employee Class and Employee.");
         }
     }
 
     @FXML
     public void removeClassEmployeeRecord() {
-        classEmployeesTable.getItems().removeAll(classEmployeesTable.getSelectionModel().getSelectedItem());
+        ClassEmployee selectedClassEmployee = classEmployeesTable.getSelectionModel().getSelectedItem();
+        if (selectedClassEmployee != null) {
+            classEmployeesTable.getItems().removeAll(classEmployeesTable.getSelectionModel().getSelectedItem());
+        }
+        else {
+            showAlert(Alert.AlertType.INFORMATION, "Please select the Employee Class you want to remove.");
+        }
     }
 
     public void showAlert(Alert.AlertType type, String message) {
@@ -208,6 +252,64 @@ public class EmployeeController {
         alert.setContentText(message);
         alert.show();
     }
+
+    @FXML
+    public void filterEmployeesByLastName() {
+        String filterText = lastNameFilterField.getText().trim().toLowerCase();
+
+        if (!filterText.isEmpty()) {
+            // Clear the current items in the table
+            employeesTable.getItems().clear();
+
+            // Filter and add employees with matching last names to the table
+            for (Employee employee : originalEmployees) {
+                if (employee.getNazwisko().toLowerCase().equals(filterText)) {
+                    employeesTable.getItems().add(employee);
+                }
+            }
+        } else {
+            // If the filter field is empty, show all employees
+            employeesTable.setItems(originalEmployees);
+            employeesTable.refresh();
+        }
+    }
+
+//    @FXML
+//    public void filterEmployeesByPartialLastName() {
+//        String partialLastName = partialLastNameField.getText().toLowerCase();
+//
+//        // Check if the partial last name is provided
+//        if (!partialLastName.isEmpty()) {
+//            // Create a list to store filtered class employees
+//            List<ClassEmployee> filteredClassEmployees = new ArrayList<>();
+//
+//            // Iterate through class employees and filter employees based on the partial last name
+//            for (ClassEmployee classEmployee : classEmployeesTable.getItems()) {
+//                List<Employee> employeesInClass = classEmployee.getListaPracownikow();
+//                List<Employee> filteredEmployeesInClass = employeesInClass.stream()
+//                        .filter(e -> e.getNazwisko().toLowerCase().contains(partialLastName))
+//                        .collect(Collectors.toList());
+//
+//                // Create a new ClassEmployee with the filtered employees
+//                ClassEmployee filteredClassEmployee = new ClassEmployee(
+//                        classEmployee.getNazwaGrupy(),
+//                        filteredEmployeesInClass,
+//                        classEmployee.getMaxIloscPracownikow()
+//                );
+//
+//                // Add the filtered ClassEmployee to the list
+//                filteredClassEmployees.add(filteredClassEmployee);
+//            }
+//
+//            // Clear the classEmployeesTable and add the filtered class employees
+//            classEmployeesTable.getItems().clear();
+//            classEmployeesTable.getItems().addAll(filteredClassEmployees);
+//        } else {
+//            // If no partial last name is provided, restore the original state of classEmployeesTable
+//            classEmployeesTable.getItems().clear();
+//            classEmployeesTable.getItems().addAll(originalClassEmployees);
+//        }
+//    }
 
 }
 

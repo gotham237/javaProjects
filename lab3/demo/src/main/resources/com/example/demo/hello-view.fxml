@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -16,8 +19,8 @@
    <Label accessibleText="Pracownicy" text="Employees" />
    <TableView fx:id="employeesTable" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="200.0" prefWidth="700.0">
      <columns>
-       <TableColumn fx:id="firstNameColumn" prefWidth="75.0" text="First Name" />
-       <TableColumn fx:id="lastNameColumn" prefWidth="76.79998779296875" text="Last Name" />
+         <TableColumn fx:id="firstNameColumn" prefWidth="75.0" text="First Name" />
+         <TableColumn fx:id="lastNameColumn" prefWidth="76.79998779296875" text="Last Name" />
          <TableColumn fx:id="employeeConditionColumn" prefWidth="75.0" text="Employee Condition" />
          <TableColumn fx:id="birthYearColumn" prefWidth="75.0" text="Birth Year" />
          <TableColumn fx:id="salaryColumn" prefWidth="75.0" text="Salary" />
@@ -28,13 +31,28 @@
    </TableView>
    <HBox prefHeight="25.0" prefWidth="727.0">
       <children>
-         <TextField fx:id="firstNameField" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="100.0" />
-         <TextField fx:id="lastNameField" prefHeight="26.0" prefWidth="100.0" />
-         <TextField fx:id="employeeConditionField" prefHeight="26.0" prefWidth="100.0" />
-         <TextField fx:id="birthYearField" prefHeight="26.0" prefWidth="100.0" />
-         <TextField fx:id="salaryField" prefHeight="26.0" prefWidth="100.0" />
+         <TextField fx:id="firstNameField" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="100.0" promptText="First name" />
+         <TextField fx:id="lastNameField" prefHeight="26.0" prefWidth="100.0" promptText="Last name" />
+         <ComboBox fx:id="employeeConditionField" prefHeight="26.0" prefWidth="150.0" promptText="Employee Condition">
+             <items>
+                 <FXCollections fx:factory="observableArrayList">
+                     <String fx:value="OBECNY" />
+                     <String fx:value="NIEOBECNY" />
+                     <String fx:value="CHORY" />
+                     <String fx:value="DELEGACJA" />
+                 </FXCollections>
+             </items>
+         </ComboBox>
+         <TextField fx:id="birthYearField" prefHeight="26.0" prefWidth="80.0" promptText="Birth year" />
+         <TextField fx:id="salaryField" prefHeight="26.0" prefWidth="80.0" promptText="Salary" />
          <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addEmployeeRecord" prefHeight="26.0" prefWidth="102.0" text="Add Employee" />
          <Button mnemonicParsing="false" onAction="#removeEmployeeRecord" prefHeight="26.0" prefWidth="114.0" text="Delete Employee" />
+      </children>
+   </HBox>
+   <HBox prefHeight="100.0" prefWidth="200.0">
+      <children>
+         <TextField fx:id="lastNameFilterField" promptText="Enter last name filter" />
+         <Button mnemonicParsing="false" onAction="#filterEmployeesByLastName" prefHeight="26.0" prefWidth="100.0" text="Filter" />
       </children>
    </HBox>
     <VBox alignment="CENTER" prefHeight="252.0" prefWidth="714.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
@@ -73,5 +91,14 @@
                 <Insets top="20.0" />
             </padding>
         </HBox>
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <TextField fx:id="partialLastNameField" prefHeight="26.0" prefWidth="160.0" promptText="Enter partial last name filter" />
+            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="100.0" text="Filter" onAction="#filterEmployeesByPartialLastName"/>
+         </children>
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
+      </HBox>
     </VBox>
 </VBox>

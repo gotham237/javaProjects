@@ -17,14 +17,6 @@ public class Employee implements Comparable<Employee> {
         this.wynagrodzenie = wynagrodzenie;
     }
 
-//    public Employee(String imie, String nazwisko) {
-//        this.imie = imie;
-//        this.nazwisko = nazwisko;
-//        this.employeeCondition = null;
-//        this.rokUrodzenia = 0;
-//        this.wynagrodzenie = 0;
-//    }
-
     public void printing() {
         System.out.println(
                 "Imie: " + imie
