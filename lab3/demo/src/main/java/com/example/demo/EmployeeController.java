@@ -258,19 +258,71 @@ public class EmployeeController {
         String filterText = lastNameFilterField.getText().trim().toLowerCase();
 
         if (!filterText.isEmpty()) {
+            // Create a new filtered list
+            List<Employee> filteredEmployees = originalEmployees.stream()
+                    .filter(employee -> employee.getNazwisko().toLowerCase().equals(filterText))
+                    .collect(Collectors.toList());
+
             // Clear the current items in the table
             employeesTable.getItems().clear();
 
-            // Filter and add employees with matching last names to the table
-            for (Employee employee : originalEmployees) {
-                if (employee.getNazwisko().toLowerCase().equals(filterText)) {
-                    employeesTable.getItems().add(employee);
-                }
-            }
+            // Add the filtered employees to the table
+            employeesTable.getItems().addAll(filteredEmployees);
         } else {
-            // If the filter field is empty, show all employees
-            employeesTable.setItems(originalEmployees);
+            // If the filter field is empty, create a new list and set it to the table
+            List<Employee> allEmployees = new ArrayList<>(originalEmployees);
+            employeesTable.setItems(FXCollections.observableArrayList(allEmployees));
             employeesTable.refresh();
+        }
+    }
+
+    @FXML
+    public void editEmployeeRecord() {
+        // Get the selected employee from the table
+        Employee selectedEmployee = employeesTable.getSelectionModel().getSelectedItem();
+
+        if (selectedEmployee != null) {
+            // Retrieve values from the text fields
+            String newFirstName = firstNameField.getText();
+            String newLastName = lastNameField.getText();
+            String newEmployeeCondition = employeeConditionField.getValue();
+            String newBirthYear = birthYearField.getText();
+            String newSalary = salaryField.getText();
+
+            // Check which fields are not empty and update the selected employee
+            if (!newFirstName.isEmpty()) {
+                selectedEmployee.setImie(newFirstName);
+            }
+            if (!newLastName.isEmpty()) {
+                selectedEmployee.setNazwisko(newLastName);
+            }
+            if (newEmployeeCondition != null) {
+                selectedEmployee.setCondition(EmployeeCondition.valueOf(newEmployeeCondition));
+            }
+            if (!newBirthYear.isEmpty()) {
+                selectedEmployee.setRokUrodzenia(Integer.parseInt(newBirthYear));
+            }
+            if (!newSalary.isEmpty()) {
+                selectedEmployee.setWynagrodzenie(Double.parseDouble(newSalary));
+            }
+
+            // Update the corresponding employee in the original list
+            int indexInOriginalList = originalEmployees.indexOf(selectedEmployee);
+            if (indexInOriginalList != -1) {
+                originalEmployees.set(indexInOriginalList, selectedEmployee);
+            }
+
+            // Refresh the table to reflect the changes
+            employeesTable.refresh();
+
+            // Clear the input fields after editing
+            firstNameField.clear();
+            lastNameField.clear();
+            employeeConditionField.setValue(null);
+            birthYearField.clear();
+            salaryField.clear();
+        } else {
+            showAlert(Alert.AlertType.INFORMATION, "Please select the employee you want to edit.");
         }
     }
 

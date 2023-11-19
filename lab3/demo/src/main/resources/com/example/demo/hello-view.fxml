@@ -43,16 +43,21 @@
                  </FXCollections>
              </items>
          </ComboBox>
-         <TextField fx:id="birthYearField" prefHeight="26.0" prefWidth="80.0" promptText="Birth year" />
-         <TextField fx:id="salaryField" prefHeight="26.0" prefWidth="80.0" promptText="Salary" />
-         <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addEmployeeRecord" prefHeight="26.0" prefWidth="102.0" text="Add Employee" />
-         <Button mnemonicParsing="false" onAction="#removeEmployeeRecord" prefHeight="26.0" prefWidth="114.0" text="Delete Employee" />
+         <TextField fx:id="birthYearField" prefHeight="26.0" prefWidth="100.0" promptText="Birth year" />
+         <TextField fx:id="salaryField" prefHeight="26.0" prefWidth="100.0" promptText="Salary" />
+         <Button alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addEmployeeRecord" prefHeight="26.0" prefWidth="102.0" text="Add Employee" />
+         <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#removeEmployeeRecord" prefHeight="26.0" prefWidth="114.0" text="Delete Employee" />
       </children>
    </HBox>
    <HBox prefHeight="100.0" prefWidth="200.0">
       <children>
          <TextField fx:id="lastNameFilterField" promptText="Enter last name filter" />
-         <Button mnemonicParsing="false" onAction="#filterEmployeesByLastName" prefHeight="26.0" prefWidth="100.0" text="Filter" />
+         <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#filterEmployeesByLastName" prefHeight="26.0" prefWidth="100.0" text="Filter" />
+         <Button alignment="BOTTOM_CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#editEmployeeRecord" prefHeight="26.0" prefWidth="101.0" text="Edit">
+            <HBox.margin>
+               <Insets left="50.0" />
+            </HBox.margin>
+         </Button>
       </children>
    </HBox>
     <VBox alignment="CENTER" prefHeight="252.0" prefWidth="714.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
@@ -77,28 +82,20 @@
             <children>
                 <TextField fx:id="groupNameField" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="100.0" />
                 <TextField fx:id="maxEmployeesField" prefHeight="26.0" prefWidth="100.0" />
-                <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addClassRecord" prefHeight="26.0" prefWidth="100.0" text="Add Class" />
-                <Button mnemonicParsing="false" onAction="#removeClassEmployeeRecord" prefHeight="26.0" prefWidth="100.0" text="Remove Class">
+                <Button alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addClassRecord" prefHeight="26.0" prefWidth="100.0" text="Add Class" />
+                <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#removeClassEmployeeRecord" prefHeight="26.0" prefWidth="100.0" text="Remove Class">
                <HBox.margin>
-                  <Insets left="150.0" />
+                  <Insets left="50.0" />
                </HBox.margin></Button>
-            <Button fx:id="addEmployeeToClassButton" mnemonicParsing="false" onAction="#addEmployeeToClassTable" prefHeight="26.0" prefWidth="150.0" text="Add Employee To Class">
+            <Button fx:id="addEmployeeToClassButton" alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#addEmployeeToClassTable" prefHeight="26.0" prefWidth="150.0" text="Add Employee To Class">
                <HBox.margin>
                   <Insets />
                </HBox.margin></Button>
+            <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="113.0" text="Edit" />
             </children>
             <padding>
                 <Insets top="20.0" />
             </padding>
         </HBox>
-      <HBox prefHeight="100.0" prefWidth="200.0">
-         <children>
-            <TextField fx:id="partialLastNameField" prefHeight="26.0" prefWidth="160.0" promptText="Enter partial last name filter" />
-            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="100.0" text="Filter" onAction="#filterEmployeesByPartialLastName"/>
-         </children>
-         <VBox.margin>
-            <Insets top="20.0" />
-         </VBox.margin>
-      </HBox>
     </VBox>
 </VBox>

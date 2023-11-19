@@ -43,7 +43,16 @@ public class Employee implements Comparable<Employee> {
     public EmployeeCondition getEmployeeCondition() {
         return this.employeeCondition;
     }
+    public void setImie(String imie) {
+        this.imie = imie;
+    }
+    public void setNazwisko(String nazwisko) {
+        this.nazwisko = nazwisko;
+    }
 
+    public void setRokUrodzenia(int rokUrodzenia) {
+        this.rokUrodzenia = rokUrodzenia;
+    }
     public void setWynagrodzenie(double wynagrodzenie) {
         this.wynagrodzenie += wynagrodzenie;
     }
