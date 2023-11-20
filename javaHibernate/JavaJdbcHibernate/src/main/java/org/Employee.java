@@ -39,7 +39,7 @@ public class Employee implements Serializable{
         this.firstName = firstName;
     }
 
-    public String getlastName() {
+    public String getLastName() {
         return lastName;
     }
 
