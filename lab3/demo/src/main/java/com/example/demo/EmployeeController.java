@@ -67,8 +67,6 @@ public class EmployeeController {
     @FXML
     private TextField partialLastNameField;
 
-    //private Map<ClassEmployee, ObservableList<Employee>> originalEmployeesMap = new HashMap<>();
-
 
     @FXML
     public void initialize() {
