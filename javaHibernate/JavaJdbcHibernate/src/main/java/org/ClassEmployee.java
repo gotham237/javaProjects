@@ -11,6 +11,7 @@ public class ClassEmployee implements Serializable {
     private static final long serialVersionUID = 2L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
     private int id;
 
@@ -25,5 +26,20 @@ public class ClassEmployee implements Serializable {
 
     public Set<Employee> getEmployees() {
         return this.employees;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setMaxNum(int maxNum) {
+        this.maxNum = maxNum;
+    }
+    public int getMaxNum() {
+        return this.maxNum;
     }
 }

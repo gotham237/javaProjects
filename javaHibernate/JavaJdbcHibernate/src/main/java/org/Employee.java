@@ -10,6 +10,7 @@ public class Employee implements Serializable{
     private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
     private int id;
 
@@ -23,7 +24,7 @@ public class Employee implements Serializable{
     private int salary;
 
     @ManyToMany(
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST}
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE}
     )
     @JoinTable(
             name = "employee_classes",
@@ -32,12 +33,12 @@ public class Employee implements Serializable{
     )
     private Set<ClassEmployee> classEmployees = new HashSet<>();
 
-    public void addClass(ClassEmployee ce) {
+    public void addClassEmployee(ClassEmployee ce) {
         this.classEmployees.add(ce);
         ce.getEmployees().add(this);
     }
 
-    public void removeClass(ClassEmployee ce) {
+    public void removeClassEmployee(ClassEmployee ce) {
         this.classEmployees.remove(ce);
         ce.getEmployees().remove(this);
     }
