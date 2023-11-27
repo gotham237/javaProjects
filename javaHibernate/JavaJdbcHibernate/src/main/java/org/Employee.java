@@ -1,9 +1,8 @@
 package org;
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "employees")
@@ -22,6 +21,26 @@ public class Employee implements Serializable{
 
     @Column(name = "salary", nullable = false)
     private int salary;
+
+    @ManyToMany(
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST}
+    )
+    @JoinTable(
+            name = "employee_classes",
+            joinColumns = @JoinColumn(name = "employee_id"),
+            inverseJoinColumns = @JoinColumn(name = "classEmployee_id")
+    )
+    private Set<ClassEmployee> classEmployees = new HashSet<>();
+
+    public void addClass(ClassEmployee ce) {
+        this.classEmployees.add(ce);
+        ce.getEmployees().add(this);
+    }
+
+    public void removeClass(ClassEmployee ce) {
+        this.classEmployees.remove(ce);
+        ce.getEmployees().remove(this);
+    }
 
     public int getId() {
         return id;

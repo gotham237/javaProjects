@@ -9,15 +9,52 @@ public class EmployeeController {
             .createEntityManagerFactory("Persistence");
 
     public static void main(String[] args) {
-//        addEmployee("Bob", "bob", 1000);
+        //addEmployee("Bob", "bob", 1000);
 //        addEmployee("Rob", "rob", 2000);
 //        addEmployee("Tob", "tob", 3000);
 //        getEmployee(3);
 //        getEmployees();
         //deleteEmployee(4);
-        updateEmployee(1, Optional.of("Szym_tym"), Optional.empty(), Optional.empty());
+        //updateEmployee(1, Optional.of("Szym_tym"), Optional.empty(), Optional.empty());
+
 
         ENTITY_MANAGER_FACTORY.close();
+    }
+
+//    public static void addEmployeeToClass(String fname, String lname, int salary, ClassEmployee classEmployee) {
+//        EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
+//        EntityTransaction et = null;
+//
+//        try {
+//            et = em.getTransaction();
+//            et.begin();
+//
+//        }
+//    }
+    public static void addClassEmployee(String className, int maxNumOfEmployees) {
+        EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction et = null;
+
+        try {
+            et = em.getTransaction();
+            et.begin();
+
+            ClassEmployee ce = new ClassEmployee();
+            ce.setClassName(className);
+            ce.setMaxNumOfEmployees(salary);
+
+            em.persist(employee);
+            et.commit();
+        }
+        catch(Exception e) {
+            if (et != null) {
+                et.rollback();
+            }
+            e.printStackTrace();
+        }
+        finally {
+            em.close();
+        }
     }
 
     public static void addEmployee(String fname, String lname, int salary) {
