@@ -53,6 +53,7 @@ public class EmployeeController {
             System.out.println(employee.getFirstName() + ", " + employee.getLastName()
                     + ", " + employee.getSalary());
         } catch(NoResultException e) {
+            System.out.println("Employee with ID '" + id + "' does not exist.");
             e.printStackTrace();
         } finally {
             em.close();
@@ -85,10 +86,15 @@ public class EmployeeController {
         try {
             et = em.getTransaction();
             et.begin();
-            employee = em.find(Employee.class, id);
-            em.remove(employee);
 
-            et.commit();
+            employee = em.find(Employee.class, id);
+
+            if (employee != null) {
+                em.remove(employee);
+                et.commit();
+            } else {
+                System.out.println("Employee with ID '" + id + "' does not exist.");
+            }
         }
         catch(Exception e) {
             if (et != null) {
@@ -161,6 +167,41 @@ public class EmployeeController {
                 employee.addClassEmployee(ce);
 
                 et.commit();
+            }
+        }
+        catch(NoResultException e) {
+            System.out.println("ClassEmployee with name '" + classEmployeeName + "' does not exist.");
+        }
+        catch(Exception e) {
+            if (et != null) {
+                et.rollback();
+            }
+            e.printStackTrace();
+        }
+        finally {
+            em.close();
+        }
+    }
+
+    public static void deleteEmployeeFromClass(int employeeId, int classId) {
+        EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction et = null;
+
+        try {
+            et = em.getTransaction();
+            et.begin();
+
+            // Execute the query to find the ClassEmployee
+            Employee e = em.find(Employee.class, employeeId);
+            ClassEmployee ce = em.find(ClassEmployee.class, classId);
+
+            if (ce != null && e != null) {
+                e.removeClassEmployee(ce);
+
+                et.commit();
+            }
+            else {
+                System.out.println("Class or Employee with that id do not exist.\n");
             }
         }
         catch(Exception e) {

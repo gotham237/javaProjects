@@ -3,6 +3,7 @@ package org;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -23,6 +24,9 @@ public class ClassEmployee implements Serializable {
 
     @ManyToMany(mappedBy = "classEmployees")
     private Set<Employee> employees = new HashSet<>();
+
+    @OneToMany(mappedBy = "classEmployee")
+    private List<Rate> rates;
 
     public Set<Employee> getEmployees() {
         return this.employees;
