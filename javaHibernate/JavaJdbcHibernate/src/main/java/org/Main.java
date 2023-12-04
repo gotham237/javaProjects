@@ -2,6 +2,8 @@ package org;
 
 import java.util.Optional;
 
+import static org.EmployeeCondition.OBECNY;
+
 public class Main {
     public static void main(String[] args) {
         EmployeeController employeeController = new EmployeeController();
@@ -9,20 +11,22 @@ public class Main {
         RateController rateController = new RateController();
 
         // You can now call methods from EmployeeController and ClassEmployeeController
-        //employeeController.addEmployee("Bob", "bob", 1000);
+        //employeeController.addEmployee("Bob1", "bob1", 1000, OBECNY, 2000);
         //classEmployeeController.addClassEmployee("Class1", 10);
         //classEmployeeController.addClassEmployee("Class2", 5);
         //classEmployeeController.addClassEmployee("Class3", 4);
         //employeeController.getEmployee(2);
 
         //addEmployee("Bob", "bob", 1000);
-//        addEmployee("Rob", "rob", 2000);
-//        addEmployee("Tob", "tob", 3000);
-//        getEmployee(3);
-//        getEmployees();
+        //employeeController.addEmployee("Rob", "rob", 2000);
+        //employeeController.addEmployee("Tob", "tob", 3000);
+        employeeController.getEmployee(26);
+        //employeeController.getEmployees();
         //deleteEmployee(4);
         //updateEmployee(1, Optional.of("Szym_tym"), Optional.empty(), Optional.empty());
-        //employeeController.addEmployeeToClass("Szym3", "tym3", 10000, "ClassB");
+        //employeeController.addEmployeeToClass("Szym3", "tym3", 10000, "Class3");
+        //employeeController.addEmployeeToClass("Szym3", "tym3", 10000, "UpdatedClass");
+        //employeeController.addEmployeeToClass("Szym3", "tym3", 10000, "Class1");
         //classEmployeeController.deleteClassEmployee(1);
         //classEmployeeController.getClassEmployees();
         //classEmployeeController.getClassEmployee(2);
@@ -32,7 +36,8 @@ public class Main {
         //rateController.updateRate(1, Optional.of(4.0), Optional.empty());
         //rateController.deleteRate(2);
         //rateController.getRate(1);
-        rateController.getRates();
+        //rateController.getRates();
+        //employeeController.search("tym");
 
         rateController.closeEntityManagerFactory();
         employeeController.closeEntityManagerFactory();

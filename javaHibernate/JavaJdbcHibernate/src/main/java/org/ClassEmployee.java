@@ -28,6 +28,9 @@ public class ClassEmployee implements Serializable {
     @OneToMany(mappedBy = "classEmployee")
     private List<Rate> rates;
 
+    public double getIsFullPercentage() {
+        return ((double)getEmployees().size() / (double)this.maxNum) * 100;
+    }
     public Set<Employee> getEmployees() {
         return this.employees;
     }

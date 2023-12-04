@@ -23,6 +23,13 @@ public class Employee implements Serializable{
     @Column(name = "salary", nullable = false)
     private int salary;
 
+    @Column(name = "employeeCondition", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private EmployeeCondition employeeCondition;
+
+    @Column(name = "birthYear", nullable = false)
+    private int birthYear;
+
     @ManyToMany(
             cascade = {CascadeType.PERSIST, CascadeType.MERGE}
     )
@@ -65,6 +72,18 @@ public class Employee implements Serializable{
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+    public void setEmployeeCondition(EmployeeCondition ec) {
+        this.employeeCondition = ec;
+    }
+    public EmployeeCondition getEmployeeCondition(){
+        return this.employeeCondition;
+    }
+    public void setBirthYear(int b) {
+        this.birthYear = b;
+    }
+    public int getBirthYear() {
+        return this.birthYear;
     }
 
     public int getSalary() {

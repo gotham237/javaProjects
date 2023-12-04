@@ -12,7 +12,7 @@ public class EmployeeController {
         ENTITY_MANAGER_FACTORY.close();
     }
 
-    public static void addEmployee(String fname, String lname, int salary) {
+    public static void addEmployee(String fname, String lname, int salary, EmployeeCondition employeeCondition, int birthYear) {
         EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
         EntityTransaction et = null;
 
@@ -24,17 +24,17 @@ public class EmployeeController {
             employee.setFirstName(fname);
             employee.setLastName(lname);
             employee.setSalary(salary);
+            employee.setEmployeeCondition(employeeCondition);
+            employee.setBirthYear(birthYear);
 
             em.persist(employee);
             et.commit();
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             if (et != null) {
                 et.rollback();
             }
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             em.close();
         }
     }
@@ -51,7 +51,7 @@ public class EmployeeController {
         try{
             employee = tq.getSingleResult();
             System.out.println(employee.getFirstName() + ", " + employee.getLastName()
-                    + ", " + employee.getSalary());
+                    + ", " + employee.getEmployeeCondition() + ", " + employee.getBirthYear()+ ", " + employee.getSalary());
         } catch(NoResultException e) {
             System.out.println("Employee with ID '" + id + "' does not exist.");
             e.printStackTrace();
@@ -215,4 +215,27 @@ public class EmployeeController {
         }
     }
 
+    public static void search(String s) {
+        EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
+        String query = "SELECT e FROM Employee e WHERE LOWER(e.lastName) LIKE LOWER(:lastName)";
+
+        TypedQuery<Employee> tq = em.createQuery(query, Employee.class);
+        tq.setParameter("lastName", "%" + s.toLowerCase() + "%");
+
+        List<Employee> employees;
+
+        try {
+            employees = tq.getResultList();
+            if(!employees.isEmpty()) {
+                employees.forEach(emp -> System.out.println(emp.getFirstName() + ", " + emp.getLastName()));
+            }
+            else {
+                System.out.println("No employees found that match this filter");
+            }
+        } catch(NoResultException e) {
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+    }
 }

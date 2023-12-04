@@ -25,7 +25,7 @@ public class ClassEmployeeController {
 
         try {
             ce = tq.getSingleResult();
-            System.out.println(ce.getClassName() + ", " + ce.getMaxNum());
+            System.out.println(ce.getClassName() + ", " + ce.getMaxNum() + ", " + ce.getIsFullPercentage() + "%");
         } catch(NoResultException e) {
             System.out.println("Class with that id not found.\n");
             e.printStackTrace();
@@ -44,10 +44,11 @@ public class ClassEmployeeController {
 
         try {
             ce = tq.getResultList();
-            ce.forEach(c -> System.out.println(c.getClassName() + ", " + c.getMaxNum()));
+            ce.forEach(c -> System.out.println(c.getClassName() + ", " + c.getMaxNum() + ", " + c.getIsFullPercentage() + "%"));
         } catch(NoResultException e) {
             e.printStackTrace();
         } finally {
+            System.out.println();
             em.close();
         }
     }
