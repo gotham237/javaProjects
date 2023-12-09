@@ -1,0 +1,4 @@
+DATABASE:
+  URL: jdbc:mysql://localhost/spring_project
+  USER: root
+  PASSWORD: root1234
