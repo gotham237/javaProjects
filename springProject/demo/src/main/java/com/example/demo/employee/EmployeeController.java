@@ -1,9 +1,8 @@
 package com.example.demo.employee;
 
+import com.example.demo.EmployeeCondition;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,5 +20,22 @@ public class EmployeeController {
     @GetMapping
     public List<Employee> getEmployees() {
         return employeeService.getEmployees();
+    }
+
+    @PostMapping
+    public void addEmployee(@RequestBody Employee employee) {
+        employeeService.addEmployee(employee);
+    }
+
+    @DeleteMapping(path = "{employeeId}")
+    public void deleteEmployee(@PathVariable("employeeId") Integer employeeId) {
+        employeeService.deleteEmployee(employeeId);
+    }
+
+    @PutMapping(path = "{employeeId}")
+    public void updateEmployee(
+            @PathVariable("employeeId") Integer employeeId,
+            @RequestBody EmployeeDTO employeeDTO) {
+        employeeService.updateEmployee(employeeId, employeeDTO);
     }
 }
