@@ -17,7 +17,7 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-    @GetMapping
+    @GetMapping()
     public List<Employee> getEmployees() {
         return employeeService.getEmployees();
     }
@@ -25,6 +25,14 @@ public class EmployeeController {
     @PostMapping
     public void addEmployee(@RequestBody Employee employee) {
         employeeService.addEmployee(employee);
+    }
+
+    @PostMapping(path = "/group/{groupId}")
+    public void addEmployeeToGroup(
+            @PathVariable("groupId") Integer groupId,
+            @RequestBody Employee employee
+    ) {
+        employeeService.addEmployeeToGroup(groupId, employee);
     }
 
     @DeleteMapping(path = "{employeeId}")

@@ -13,25 +13,29 @@ public class EmployeeConfig {
     @Bean
     CommandLineRunner commandLineRunner(EmployeeRepository repository) {
         return args -> {
-            Employee test1 = new Employee(
-                    "test1",
-                    "test1",
-                    2000,
-                    EmployeeCondition.CHORY,
-                    10000
-            );
+            if (!repository.findEmployeeByFirstNameAndLastName("test1", "test1").isPresent()) {
+                Employee test1 = new Employee(
+                        "test1",
+                        "test1",
+                        2000,
+                        EmployeeCondition.CHORY,
+                        10000
+                );
 
-            Employee test2 = new Employee(
-                    "test2",
-                    "test2",
-                    2004,
-                    EmployeeCondition.OBECNY,
-                    8000
-            );
+                repository.save(test1);
+            }
 
-            repository.saveAll(
-                    List.of(test1, test2)
-            );
+            if (!repository.findEmployeeByFirstNameAndLastName("test2", "test2").isPresent()) {
+                Employee test2 = new Employee(
+                        "test2",
+                        "test2",
+                        2004,
+                        EmployeeCondition.OBECNY,
+                        8000
+                );
+
+                repository.save(test2);
+            }
         };
     }
 }

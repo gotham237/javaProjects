@@ -5,6 +5,7 @@ import com.example.demo.classEmployee.ClassEmployee;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -68,6 +69,10 @@ public class Employee implements Serializable{
     public void removeClassEmployee(ClassEmployee ce) {
         this.classEmployees.remove(ce);
         ce.getEmployees().remove(this);
+    }
+
+    public Set<ClassEmployee> getClassEmployees() {
+        return this.classEmployees;
     }
 
     public int getId() {

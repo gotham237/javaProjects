@@ -1,10 +1,12 @@
 package com.example.demo.classEmployee;
 
+import com.example.demo.employee.Employee;
 import com.example.demo.employee.EmployeeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(path = "/api/group")
@@ -17,8 +19,13 @@ public class ClassEmployeeController {
     }
 
     @GetMapping
-    public List<ClassEmployee> GetClassEmployee() {
+    public List<ClassEmployee> getGroups() {
         return classEmployeeService.getGroups();
+    }
+
+    @GetMapping(path = "{groupId}/employee")
+    public Set<Employee> getEmployeesFromGroup(@PathVariable("groupId") Integer groupId) {
+        return classEmployeeService.getEmployeesFromGroup(groupId);
     }
 
     @PostMapping

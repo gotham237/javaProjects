@@ -26,7 +26,8 @@ public class ClassEmployee implements Serializable {
     @Column(name = "maxNumberOfEmployees", nullable = false)
     private int maxNum;
 
-    @ManyToMany(mappedBy = "classEmployees")
+    @JsonIgnore
+    @ManyToMany(mappedBy = "classEmployees", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private Set<Employee> employees = new HashSet<>();
 
     @OneToMany(mappedBy = "classEmployee")
@@ -52,6 +53,11 @@ public class ClassEmployee implements Serializable {
     }
     public int getMaxNum() {
         return this.maxNum;
+    }
+
+    public void addClassEmployee(Employee employee) {
+        this.employees.add(employee);
+        employee.getClassEmployees().add(this);
     }
 }
 

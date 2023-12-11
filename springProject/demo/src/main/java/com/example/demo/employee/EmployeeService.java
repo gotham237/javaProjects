@@ -1,22 +1,24 @@
 package com.example.demo.employee;
 
 import com.example.demo.EmployeeCondition;
+import com.example.demo.classEmployee.ClassEmployee;
+import com.example.demo.classEmployee.ClassEmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
+    private final ClassEmployeeRepository classEmployeeRepository;
 
     @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository) {
+    public EmployeeService(EmployeeRepository employeeRepository, ClassEmployeeRepository classEmployeeRepository) {
         this.employeeRepository = employeeRepository;
+        this.classEmployeeRepository = classEmployeeRepository;
     }
 
     public List<Employee> getEmployees() {
@@ -25,6 +27,15 @@ public class EmployeeService {
 
     public void addEmployee(Employee employee) {
         employeeRepository.save(employee);
+    }
+
+    public void addEmployeeToGroup(Integer groupId, Employee employee) {
+        ClassEmployee ce = classEmployeeRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalStateException(
+                        "group with id " + groupId + " does not exist"));
+
+        ce.addClassEmployee(employee);
+        classEmployeeRepository.save(ce);
     }
 
     public void deleteEmployee(Integer employeeId) {
