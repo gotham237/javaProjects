@@ -2,6 +2,7 @@ package com.example.demo.classEmployee;
 
 import com.example.demo.employee.Employee;
 import com.example.demo.rate.Rate;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
