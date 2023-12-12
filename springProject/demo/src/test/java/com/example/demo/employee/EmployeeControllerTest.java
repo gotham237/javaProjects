@@ -1,35 +1,37 @@
 package com.example.demo.employee;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
+@WebMvcTest(EmployeeController.class)
+@ExtendWith(SpringExtension.class)
 class EmployeeControllerTest {
-    @Mock
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
     private EmployeeService employeeService;
 
-    @InjectMocks
-    private EmployeeController employeeController;
-
-    private final MockMvc mockMvc;
-
-    public EmployeeControllerTest(MockMvc mockMvc) {
-        this.mockMvc = mockMvc;
-    }
-
     @Test
-    void getEmployees() throws Exception {
+    void canGetEmployees() throws Exception {
         // Mocking the service behavior
         List<Employee> employees = Arrays.asList(new Employee(), new Employee());
         when(employeeService.getEmployees()).thenReturn(employees);
@@ -39,21 +41,5 @@ class EmployeeControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(employees)))
                 .andDo(print()); // for debugging, print the result to the console
-    }
-
-    @Test
-    void addEmployee() {
-    }
-
-    @Test
-    void addEmployeeToGroup() {
-    }
-
-    @Test
-    void deleteEmployee() {
-    }
-
-    @Test
-    void updateEmployee() {
     }
 }
