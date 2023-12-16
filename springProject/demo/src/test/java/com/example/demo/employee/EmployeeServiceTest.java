@@ -1,6 +1,6 @@
 package com.example.demo.employee;
 
-import com.example.demo.EmployeeCondition;
+import com.example.demo.classEmployee.ClassEmployee;
 import com.example.demo.classEmployee.ClassEmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -16,8 +16,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class EmployeeServiceTest {
@@ -87,8 +86,32 @@ class EmployeeServiceTest {
     }
 
     @Test
-    @Disabled
-    void addEmployeeToGroup() {
+    void canAddEmployeeToGroup() {
+        // given
+        Integer groupId = 1;
+        Employee employee = new Employee(
+                "Szymon",
+                "Tym",
+                2002,
+                EmployeeCondition.DELEGACJA,
+                6500
+        );
+
+        ClassEmployee classEmployee = new ClassEmployee();
+
+        // Mock the behavior of findById
+        given(classEmployeeRepository.findById(groupId)).willReturn(Optional.of(classEmployee));
+
+        // when
+        underTest.addEmployeeToGroup(groupId, employee);
+
+        // then
+        ArgumentCaptor<Employee> employeeCaptor = ArgumentCaptor.forClass(Employee.class);
+        verify(employeeRepository).save(employeeCaptor.capture());
+        Employee capturedEmployee = employeeCaptor.getValue();
+
+        assertThat(capturedEmployee).isEqualTo(employee);
+        assertThat(classEmployee.getEmployees().contains(employee)).isEqualTo(true);
     }
 
     @Test

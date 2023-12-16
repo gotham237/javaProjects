@@ -1,11 +1,9 @@
 package com.example.demo.employee;
 
-import com.example.demo.EmployeeCondition;
 import com.example.demo.classEmployee.ClassEmployee;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -117,6 +115,10 @@ public class Employee implements Serializable{
 
     public void setSalary(int salary) {
         this.salary = salary;
+    }
+
+    public Set<ClassEmployee> getClasses() {
+        return classEmployees;
     }
 }
 

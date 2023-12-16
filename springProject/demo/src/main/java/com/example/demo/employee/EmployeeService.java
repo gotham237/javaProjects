@@ -1,14 +1,18 @@
 package com.example.demo.employee;
 
-import com.example.demo.EmployeeCondition;
 import com.example.demo.classEmployee.ClassEmployee;
 import com.example.demo.classEmployee.ClassEmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+
+import static com.example.demo.employee.helpers.employeeHelpers.convertEmployeesToCSV;
 
 @Service
 public class EmployeeService {
@@ -23,6 +27,30 @@ public class EmployeeService {
 
     public List<Employee> getEmployees() {
         return employeeRepository.findAll();
+    }
+
+    public ResponseEntity<byte[]> getEmployeesAsCsv() {
+        List<Employee> employees = employeeRepository.findAll();
+
+        if (!employees.isEmpty()) {
+            // Create a CSV representation of the employees
+            String csvData = convertEmployeesToCSV(employees);
+
+            byte[] csvBytes = csvData.getBytes();
+
+            // Create response headers
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType("text/csv"));
+            headers.setContentDispositionFormData("attachment", "employees.csv");
+
+            // Return the CSV data as a downloadable file
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(csvBytes);
+        }
+        else {
+            throw new IllegalStateException("No employees were found");
+        }
     }
 
     public void addEmployee(Employee employee) {
@@ -42,8 +70,8 @@ public class EmployeeService {
                 .orElseThrow(() -> new IllegalStateException(
                         "group with id " + groupId + " does not exist"));
 
-        ce.addClassEmployee(employee);
-        classEmployeeRepository.save(ce);
+        employee.addClassEmployee(ce);
+        employeeRepository.save(employee);
     }
 
     public void deleteEmployee(Integer employeeId) {

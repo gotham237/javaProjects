@@ -3,6 +3,7 @@ package com.example.demo.classEmployee;
 import com.example.demo.employee.Employee;
 import com.example.demo.employee.EmployeeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,13 +29,18 @@ public class ClassEmployeeController {
         return classEmployeeService.getEmployeesFromGroup(groupId);
     }
 
+    @GetMapping(path = "{groupId}/fill")
+    public double getFill(@PathVariable("groupId") Integer groupId) {
+        return classEmployeeService.getFill(groupId);
+    }
+
     @PostMapping
     public void addGroup(@RequestBody ClassEmployee classEmployee) {
         classEmployeeService.addGroup(classEmployee);
     }
 
     @DeleteMapping(path = "{groupId}")
-    public void deleteEmployee(@PathVariable("groupId") Integer groupId) {
+    public void deleteGroup(@PathVariable("groupId") Integer groupId) {
         classEmployeeService.deleteGroup(groupId);
     }
 

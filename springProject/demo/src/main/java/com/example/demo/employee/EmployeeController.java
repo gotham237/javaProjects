@@ -1,7 +1,7 @@
 package com.example.demo.employee;
 
-import com.example.demo.EmployeeCondition;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,9 +17,14 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-    @GetMapping()
+    @GetMapping
     public List<Employee> getEmployees() {
         return employeeService.getEmployees();
+    }
+
+    @GetMapping(path = "/csv", produces = "text/csv")
+    public ResponseEntity<byte[]> getEmployeesAsCSV() {
+        return employeeService.getEmployeesAsCsv();
     }
 
     @PostMapping

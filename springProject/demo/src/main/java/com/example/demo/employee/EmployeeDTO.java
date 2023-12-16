@@ -1,7 +1,5 @@
 package com.example.demo.employee;
 
-import com.example.demo.EmployeeCondition;
-
 public class EmployeeDTO {
     private String firstName;
     private String lastName;
