@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -79,4 +80,28 @@ class EmployeeControllerTest {
     }
 
 
+    @Test
+    void shouldGetEmployeesAsCSV() throws Exception{
+
+        when(employeeService.getEmployeesAsCsv()).thenReturn(createMockCsvResponse());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/employee/csv")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", "text/csv"))
+                .andExpect(MockMvcResultMatchers.header().string("Content-Disposition", "attachment; filename=employees.csv"))
+                .andExpect(MockMvcResultMatchers.content().string(createExpectedCsvContent()));
+    }
+
+    private ResponseEntity<byte[]> createMockCsvResponse() {
+        byte[] mockCsvData = "firstName,lastName,birthYear,salary,employeeCondition\nJohn,Doe,1990,5000,DELEGACJA\n".getBytes();
+        return ResponseEntity.ok()
+                .header("Content-Type", "text/csv")
+                .header("Content-Disposition", "attachment; filename=employees.csv")
+                .body(mockCsvData);
+    }
+
+    private String createExpectedCsvContent() {
+        return "firstName,lastName,birthYear,salary,employeeCondition\nJohn,Doe,1990,5000,DELEGACJA\n";
+    }
 }
