@@ -42,7 +42,15 @@ public class ClassEmployeeService {
     }
 
     public void addGroup(ClassEmployee classEmployee) {
-        classEmployeeRepository.save(classEmployee);
+        boolean exists = classEmployeeRepository.existsByClassName(classEmployee.getClassName());
+
+        if(!exists){
+            classEmployeeRepository.save(classEmployee);
+        }
+        else {
+            throw new IllegalStateException(
+                    "Group with name: " + classEmployee.getClassName() + " already exists");
+        }
     }
 
     public void deleteGroup(Integer groupId) {

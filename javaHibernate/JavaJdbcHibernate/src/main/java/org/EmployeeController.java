@@ -140,7 +140,7 @@ public class EmployeeController {
         }
     }
 
-    public static void addEmployeeToClass(String fname, String lname, int salary, String classEmployeeName) {
+    public static void addEmployeeToClass(String fname, String lname, int salary,EmployeeCondition employeeCondition, String classEmployeeName) {
         EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
         EntityTransaction et = null;
 
@@ -161,6 +161,7 @@ public class EmployeeController {
                 employee.setFirstName(fname);
                 employee.setLastName(lname);
                 employee.setSalary(salary);
+                employee.setEmployeeCondition(employeeCondition);
 
                 em.persist(employee);
                 em.persist(ce);

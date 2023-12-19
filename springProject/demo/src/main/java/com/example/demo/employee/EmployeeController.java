@@ -1,6 +1,7 @@
 package com.example.demo.employee;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,8 +19,13 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public List<Employee> getEmployees() {
-        return employeeService.getEmployees();
+    public ResponseEntity<?> getEmployees() {
+        try {
+            List<Employee> employees = employeeService.getEmployees();
+            return ResponseEntity.ok().body(employees);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping(path = "/csv", produces = "text/csv")
@@ -28,27 +34,51 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public void addEmployee(@RequestBody Employee employee) {
-        employeeService.addEmployee(employee);
+    public ResponseEntity<String> addEmployee(@RequestBody Employee employee) {
+        try {
+            employeeService.addEmployee(employee);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Employee added successfully");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("An error occurred while adding the employee");
+        }
     }
 
     @PostMapping(path = "/group/{groupId}")
-    public void addEmployeeToGroup(
+    public ResponseEntity<String> addEmployeeToGroup(
             @PathVariable("groupId") Integer groupId,
             @RequestBody Employee employee
     ) {
-        employeeService.addEmployeeToGroup(groupId, employee);
+        try {
+            employeeService.addEmployeeToGroup(groupId, employee);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Employee added to group successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Group NOT FOUND.");
+        }
     }
 
     @DeleteMapping(path = "{employeeId}")
-    public void deleteEmployee(@PathVariable("employeeId") Integer employeeId) {
-        employeeService.deleteEmployee(employeeId);
+    public ResponseEntity<String> deleteEmployee(@PathVariable("employeeId") Integer employeeId) {
+        try {
+            employeeService.deleteEmployee(employeeId);
+            return ResponseEntity.ok().body("Employee deleted successfully");
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while deleting the employee");
+        }
     }
 
     @PutMapping(path = "{employeeId}")
-    public void updateEmployee(
+    public ResponseEntity<String> updateEmployee(
             @PathVariable("employeeId") Integer employeeId,
             @RequestBody EmployeeDTO employeeDTO) {
-        employeeService.updateEmployee(employeeId, employeeDTO);
+        try {
+            employeeService.updateEmployee(employeeId, employeeDTO);
+            return ResponseEntity.ok().body("Employee updated successfully");
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while updating the employee");
+        }
     }
 }

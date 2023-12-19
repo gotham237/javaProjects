@@ -91,7 +91,7 @@ class ClassEmployeeControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/group")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(classEmployee)))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         ArgumentCaptor<ClassEmployee> groupCaptor = ArgumentCaptor.forClass(ClassEmployee.class);
         verify(classEmployeeService).addGroup(groupCaptor.capture());

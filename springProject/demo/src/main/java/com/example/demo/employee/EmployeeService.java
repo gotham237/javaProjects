@@ -43,7 +43,6 @@ public class EmployeeService {
             headers.setContentType(MediaType.parseMediaType("text/csv"));
             headers.setContentDispositionFormData("attachment", "employees.csv");
 
-            // Return the CSV data as a downloadable file
             return ResponseEntity.ok()
                     .headers(headers)
                     .body(csvBytes);

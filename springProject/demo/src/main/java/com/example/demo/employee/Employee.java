@@ -1,6 +1,7 @@
 package com.example.demo.employee;
 
 import com.example.demo.classEmployee.ClassEmployee;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -115,10 +116,6 @@ public class Employee implements Serializable{
 
     public void setSalary(int salary) {
         this.salary = salary;
-    }
-
-    public Set<ClassEmployee> getClasses() {
-        return classEmployees;
     }
 }
 
