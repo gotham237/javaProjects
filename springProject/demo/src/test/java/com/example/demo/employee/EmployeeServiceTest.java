@@ -10,6 +10,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -32,10 +34,19 @@ class EmployeeServiceTest {
 
     @Test
     void canGetEmployees() {
-        //when
-        underTest.getEmployees();
-        //then
-        verify(employeeRepository).findAll();
+        // given
+        Employee employee1 = new Employee("John", "Doe", 1990, EmployeeCondition.OBECNY, 5000);
+        Employee employee2 = new Employee("Jane", "Doe", 1995, EmployeeCondition.NIEOBECNY, 3500);
+
+        List<Employee> employees = Arrays.asList(employee1, employee2);
+
+        when(employeeRepository.findAll()).thenReturn(employees);
+
+        // when
+        List<Employee> result = underTest.getEmployees();
+
+        // then
+        assertThat(result).isEqualTo(employees);
     }
 
     @Test

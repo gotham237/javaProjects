@@ -36,8 +36,24 @@ public class ClassEmployee implements Serializable {
     public double getIsFullPercentage() {
         return ((double)getEmployees().size() / (double)this.maxNum) * 100;
     }
+
+    public ClassEmployee(String groupName, int maxNum) {
+        this.className = groupName;
+        this.maxNum = maxNum;
+    }
+
+    public ClassEmployee() {
+        this.className = "";
+        this.maxNum = 1;
+        this.employees = new HashSet<>();
+    }
+
     public Set<Employee> getEmployees() {
         return this.employees;
+    }
+
+    public void setEmployees(Set<Employee> employees) {
+        this.employees = employees;
     }
 
     public void setClassName(String className) {
